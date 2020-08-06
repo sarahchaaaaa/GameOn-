@@ -1,0 +1,32 @@
+{% extends 'layout.html' %}
+
+{% block title %}Leaderboard{% endblock %}
+
+{% block content %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <body>
+        <br>
+        <img src="{{ url_for('static', filename='the_leaderboard.png') }}" style="display: block; margin-left: auto; margin-right: auto; width: 60%;"/>
+        <!-- Has the rankings of the leaderboard -->
+        <h2>Rankings</h2>
+        <br>
+        <table class='css-serial' style="table-layout: fixed;margin-left: auto; margin-right: auto; text-align: center;">
+            <tr>
+                <th style="padding-left: 50px; padding-right: 50px;">Rank</th>
+                <th style="padding-left: 50px; padding-right: 50px;">Username</th>
+                <th style="padding-left: 50px; padding-right: 50px;">Points</th>
+
+            </tr>
+            {% for item in accounts %}
+            <tbody>
+                <tr>
+                    <td></td>
+                    <td> {{item[0]}} </td>
+                    <td> {{item[1]}} </td>
+                </tr>
+            </tbody>
+            {% endfor %}
+    </table>
+    </body>
+</html>
+{% endblock %}

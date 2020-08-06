@@ -1,0 +1,18 @@
+{% extends 'layout.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<!-- Home page with background information -->
+<img src="{{ url_for('static', filename='gameon_logo.png') }}" style="width:100%"/>
+<h1>Welcome, {{ username }}!</h1>
+<p>Today's date is {{ date }}! </p>
+
+<p style='border-radius: 15px;'> Welcome to <strong>GameOn</strong>, a way for you to keep up to date with your favorite Notre Dame interhall and club sports. 
+    Visit the <strong>Explore</strong> page to search and follow games, or follow a team to keep up with their progress throughout the season. 
+    Check out the <strong>Following</strong> page to place your bets and compete against your friends. 
+    You can see how you rank on the <strong>Leaderboard!</strong> Most importantly, have fun and play responsibly.
+</p>
+
+
+{% endblock %}

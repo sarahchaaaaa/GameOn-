@@ -1,0 +1,153 @@
+{% extends 'layout.html' %}
+
+{% block title %}Following{% endblock %}
+
+{% block content %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <body>
+        <br>
+        <img src="{{ url_for('static', filename='yourfollowing.png') }}" style="display: block; margin-left: auto; margin-right: auto; width: 40%;"/>
+        <h2>Upcoming Games</h2>
+        <br>
+        <table style="table-layout: fixed; margin-left: auto; margin-right: auto; text-align: center;">
+        <!-- Shows the upcoming games -->
+        {% if upcomingBets == [] %}
+        <h2> You have no upcoming games</h2>
+        {% else %}
+        <tr>
+            <th style="padding-left: 10px; padding-right: 10px;">Date/Time</th>
+            <th style="padding-left: 5px; padding-right: 5px;">Location</th>
+            <th style="padding-left: 10px; padding-right: 10px;">Sport</th>
+            <th style="padding-left: 10px; padding-right: 10px;">Home Team</th>
+            <th style="padding-left: 10px; padding-right: 10px;">Away Team</th>
+            <th style="padding-left: 10px; padding-right: 10px;">Your Bet</th>
+            <th >Submit Bet</th>
+            <th >Unfollow?</th>
+        </tr>
+        
+        {% set numGames = upcoming|length %}
+
+        {% for item in range(numGames) %}
+            <tr>
+                <td> {{upcoming[item][1]}}  </td>
+                <td> {{upcoming[item][2]}} </td>
+                <td> {{upcoming[item][3]}}  </td>
+                <td> {{upcoming[item][4]}}  </td>
+                <td> {{upcoming[item][5]}}  </td>
+                        <!-- check what the user has already bet and display current bet -->
+                    {% if upcomingBets[item][0] == 0 %}
+                        {% set option1 = "Home Team Loss" %}
+                        {% set option2 = "Home Team Win" %}
+                        {% set option3 = "No Bet" %}
+      
+                      {% elif upcomingBets[item][0] == 1 %}
+                        {% set option1 = "Home Team Win" %}
+                        {% set option2 = "Home Team Loss" %}
+                        {% set option3 = "No Bet" %}
+      
+                      {% else %}
+                        {% set option1 = "No Bet" %}
+                        {% set option2 = "Home Team Win" %}
+                        {% set option3 = "Home Team Loss" %}
+      
+                      {% endif %}
+
+                      <td style="transform: translateY(25%);"> 
+                          <form name="bets" action="{{ url_for('following') }}" onchange="GetSelectedValue('{{item}}','{{upcoming[item][0]}}')" method="post" style="width:155px;">
+                              <div class="form-group">
+                                <select class="form-control" id="{{item}}">
+                                  <option selected="selected">  {{option1}} </option>
+                                  <option>{{option2}}</option>
+                                  <option>{{option3}}</option>
+                                </select>
+                                <br>
+                              </div>
+                            </form>
+                      </td>
+                      <td style="transform: translateY(5%);">
+                        <form name="betplace" action="{{ url_for('following') }}" method="post" style="width:120px;">
+                            <label for="bet">    
+                                <input type="hidden" name="bet" value="{{upcomingBets[item][0]}}" id='{{upcoming[item][0]}}'>
+                                <input type="hidden" name="bet_game_id" value="{{upcoming[item][0]}}" id='{{item}}'>
+                                <input type="submit" class="btn btn-primary" onclick= alertBet() value="Place Bet">
+                            </label>
+                        </form>
+                      </td>
+                      <td style="transform: translateY(0.5%);">
+                        <form name="unfollow" action="{{ url_for('following') }}" method="post" style="width:120px;">
+                            <input type="hidden" name="game_id" value="{{upcoming[item][0]}}">
+                            <input type="submit" class="btn btn-danger" onclick= alertUnfollow() value="Unfollow">
+                        </form>
+                      </td>
+                  </tr>
+        {% endfor %}
+        
+        {% endif %}
+    </table>
+    <!-- Shows the past games -->
+    <h2>Past Games</h2>
+    <br>
+    {% if numGames != [] %}
+    <table style="margin-left: 2%; margin-right: 2%; width: 96%; text-align: center;">
+        <tr>
+            <th>Date/Time</th>
+            <th>Location</th>
+            <th>Sport</th>
+            <th>Home Team</th>
+            <th>Away Team</th>
+            <th>Home Result</th>
+            <th>Home Score</th>
+            <th>Away Result</th>
+            <th>Away Score</th>
+            <th>Your Bet</th>
+        </tr>
+        {% set numGames = past|length %}
+
+        {% for item in range(numGames) %}
+        <tr>
+            <td> {{past[item][1]}}  </td>
+            <td> {{past[item][2]}}  </td>
+            <td> {{past[item][3]}}  </td>
+            <td> {{past[item][4]}}  </td>
+            <td> {{past[item][5]}}  </td>
+            <td> {{past[item][6]}}  </td>
+            <td> {{past[item][7]}}  </td>
+            <td> {{past[item][8]}}  </td>
+            <td> {{past[item][9]}}  </td>
+
+                <!-- check what the user has already bet and display current bet -->
+                {% if pastBets[item][0] == 0 %}
+                {% set pastBet = "Home Team Loss" %}
+
+                {% elif pastBets[item][0] == 1 %}
+                {% set pastBet = "Home Team Win" %}
+
+                {% else %}
+                {% set pastBet = "No Bet" %}
+
+                {% endif %}
+            <td> {{pastBet}}  </td>
+        </tr>
+        {% endfor %}
+    {% else %}
+    <h2> You have no past games </h2>
+    {% endif %}
+</table>
+    <script>
+
+        function GetSelectedValue(number, id){
+            var e = document.getElementById(number);
+            var result = e.options[e.selectedIndex].value;
+            document.getElementById(id).value = result;
+        }
+
+        function alertBet(){
+            alert("Your bet has been successfully placed! You may change your bet until the game starts!");
+        }
+        function alertUnfollow(){
+            alert("Game has been successfully unfollowed! Search new games in 'Explore'!");
+        }
+    </script>
+    </body>
+</html>
+{% endblock %}

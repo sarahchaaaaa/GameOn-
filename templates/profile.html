@@ -1,0 +1,108 @@
+{% extends 'layout.html' %}
+
+{% block title %}Profile{% endblock %}
+
+{% block content %}
+<br>
+<img src="{{ url_for('static', filename='myprofile.png') }}" style="display: block; margin-left: auto; margin-right: auto; width: 20%;"/>
+<div>
+    <p>Your account details are below:
+    <table>
+        <tr>
+            <td>Username:</td>
+            <td>{{ account[1] }}</td>
+        </tr>
+        <tr>
+            <td>Email:</td>
+            <td>{{ account[3] }}</td>
+        </tr>
+        <tr>
+            <td>Dorm:</td>
+            <td>{{ account[6] }}</td>
+        </tr>
+        <tr>
+            <td>Phone Number:</td>
+            <td>{{ account[4] }}</td>
+        </tr>
+        <tr>
+            <form name="changePassword" action="{{ url_for('profile') }}" method="post">
+                {% if changeButton != 0 %}
+                <input type="submit" class="btn btn-secondary" value="Change Password">
+                <label for='changeButton'>
+                    <input type="hidden" name="changeButton" value="1">
+                </label>
+                {% endif %}
+                <br>
+                <tr>
+                    {{msg}}
+                </tr>
+                <br>
+                {% if changeButton == 0 %}
+                <label for="new_password">   
+                    <i class="fas fa-lock"></i>             
+                </label>
+                <input type="password" name="new_password" placeholder="New Password">
+                <label for="new_password_check">   
+                    <i class="fas fa-lock"></i>             
+                </label>
+                <input type="password" name="new_password_check"  placeholder="Retype New Password">
+                <input type="submit" class="btn btn-primary" value="Confirm">
+                {% endif %}
+            </form>
+        </tr>        
+    </table>
+    {% if user_id == 0 %}
+    <p style="font-size:14px; color:#ff0000 ; font-weight:bold; font-style:italic;">{{ updateStatus }}</p>
+    <h2> Add Game Results Here</h2>
+    <table style="margin-left: auto; margin-right: auto; width: 100%; text-align: center;">
+        <tr>
+            <th>Game Number</th>
+            <th>Sport</th>
+            <th>Home Team</th>
+            <th>Away Team</th>
+            <th>Home Result</th>
+            <th>Home Score</th>
+            <th>Away Result</th>
+            <th>Away Score</th>
+        </tr>
+        {% for item in games %}
+        <tr>
+            <td> {{item[0]}}  </td>
+            <td> {{item[4]}}  </td>
+            <td> {{item[7]}}  </td>
+            <td> {{item[10]}} </td>
+            <form name="followGame" action="{{ url_for('profile') }}" method="post">  
+                <td>   
+                    <label for="home_result">                
+                        <input type="text" name="home_result"  placeholder="Enter W/L" style="width:100px; border: 1.5px solid; border-radius: 10px;">
+                    </label>
+                </td>                  
+                <td>
+                    <label for='home_score'>
+                        <input type="text" name="home_score" placeholder="Enter Score" style="width:100px; border: 1.5px solid; border-radius: 10px;">
+                    </label>
+                </td>
+                <td>
+                    <label for='away_result'>
+                        <input type="text" name="away_result" placeholder="Enter W/L" style="width:100px; border: 1.5px solid; border-radius: 10px;">
+                    </label>
+                </td>
+                <td>
+                    <label for='away_score'>
+                        <input type="text" name="away_score" placeholder="Enter Score" style="width:100px; border: 1.5px solid; border-radius: 10px;">
+                    </label>
+                </td>
+                <td>
+                    <input type="submit" class="btn btn-primary" value="Submit Changes">
+                </td>
+                    <label for='game_id'>
+                        <input type="hidden" name="game_id" value="{{item[0]}}">
+                    </label>
+            </form>
+        </tr>
+        {% endfor %}
+    {% endif %}
+    </table>
+    </p>
+</div>
+{% endblock %}

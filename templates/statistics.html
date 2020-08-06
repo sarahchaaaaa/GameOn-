@@ -1,0 +1,60 @@
+{% extends 'layout.html' %}
+
+{% block title %}Statistics{% endblock %}
+
+{% block content %}
+<!-- This page shows statistics of a certain team's next ga,e -->
+<!-- Search Bar -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<body>
+    <br>
+    <img src="{{ url_for('static', filename='searchteams.png') }}" style="display: block; margin-left: auto; margin-right: auto; width: 40%;"/>
+    <form class="example" method="post" action="" 
+     style="margin:auto;max-width:700px;text-align:center;">
+     <input type="text" id='searchbar' placeholder="Search for a team" name="search" style="height:40px; border-radius:10px; border-style: solid; text-align: center;">
+     <button type="submit" value="Search" style='border-radius:10px;'>Search<i class="fa fa-search"></i>
+     </button>
+    </form>
+    <br>
+    <img src="{{ url_for('static', filename='team_stats.png') }}" style="display: block; margin-left: auto; margin-right: auto; height: 90px;"/>
+    {% if team_info|length > 0 %}
+    <table style="table-layout: fixed;margin-left: auto; margin-right: auto; text-align: center;">
+        <tr>
+            <th style="padding-left: 50px; padding-right: 50px;">Team Name</th>
+            <th style="padding-left: 50px; padding-right: 50px;">Sport</th>
+            <th style="padding-left: 50px; padding-right: 50px;">League</th>
+            <th style="padding-left: 50px; padding-right: 50px;">Total Wins</th>
+            <th style="padding-left: 50px; padding-right: 50px;">Total Losses</th>
+            <th style="padding-left: 50px; padding-right: 50px;">Win Rate</th>
+
+        </tr>
+
+        <tbody>
+            <tr>
+                <td> {{team_info[0]}} </td>
+                <td> {{team_info[1]}} </td>
+                <td> {{team_info[2]}} </td>
+                <td> {{team_info[3]}} </td>
+                <td> {{team_info[4]}} </td>
+                <td> {{ winRate }} </td>
+
+            </tr>
+        </tbody>
+</table>
+<br> 
+    <h3> Win Percentage Over Time </h3>
+    <img src="{{ url_for('static', filename='linegraph.png') }}" style="display: block; margin-left: auto; margin-right: auto; width: 40%;"/>
+<br>
+    <h3> {{team_info[0]}}'s Home Wins Vs. Away Wins</h1>
+    <img src="{{ url_for('static', filename='bargraph.png') }}" style="display: block; margin-left: auto; margin-right: auto; width: 40%;"/>
+<br>
+    <h3> Expected Outcome of Upcoming Game</h3>
+    <img src="{{ url_for('static', filename='piechart.png') }}" style="display: block; margin-left: auto; margin-right: auto; width: 40%;"/>
+    
+    {% else %}
+
+    <h2> {{results}} </h2>
+
+    {% endif %}
+
+    {% endblock %}

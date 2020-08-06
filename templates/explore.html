@@ -1,0 +1,124 @@
+{% extends 'layout.html' %}
+
+{% block title %}Explore{% endblock %}
+
+{% block content %}
+<!-- Search Bar -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <body>
+        <br>
+        <img src="{{ url_for('static', filename='explore_games.png') }}" style="display: block; margin-left: auto; margin-right: auto; width: 40%;"/>
+        <form class="example" method="post" action="" 
+         style="margin:auto;max-width:700px;text-align:center;">
+         <input type="text" id='searchbar' placeholder="Search by sport" name="search" style="height:40px; border-radius:10px; border-style: solid; text-align: center;">
+         <button type="submit" value="Search" style='border-radius:10px;'>Search<i class="fa fa-search"></i>
+         </button>
+         <br>
+         <label for="toggle_status" onclick=myFunction() class="switch">
+             <input value='searchbysport' id='toggle' name="toggle_status" type="checkbox" style='text-align: left; transform: scale(1.5);'>   Search by Teams
+             <span class="slider round"></span>
+         </label>
+        </form>
+        <br>
+        <img src="{{ url_for('static', filename='searchresults.png') }}" style="display: block; margin-left: auto; margin-right: auto; width: 40%;"/>
+
+        <!-- IF THEY SEARCH FOR A GAME -->
+        {% if games|length > 0 %}
+                <h2>Resulting Games</h2>
+                <table style="margin-left: auto; margin-right: auto; width: 100%; text-align: center;">
+                    <tr>
+                        <th>Date/Time</th>
+                        <th>Location</th>
+                        <th>Sport</th>
+                        <th>Home Team</th>
+                        <th>Away Team</th>
+
+                    </tr>
+                    {% for item in games %}
+                    <tr>
+                        <td> {{item[0]}}  </td>
+                        <td> {{item[1]}} </td>
+                        <td> {{item[2]}}  </td>
+                        <td> {{item[3]}}  </td>
+                        <td> {{item[4]}}  </td>
+                        <td>
+                            <form name="followGame" action="{{ url_for('explore') }}" method="post">    
+                                <label for="game_id">                
+                                    <input type="hidden" name="game_id" value="{{item[5]}}">
+                                    <input type="submit" onclick= alertGame() class="btn btn-primary" value="Follow">
+                                </label>
+                                <label for='sport_check'>
+                                    <input type="hidden" name="sport_check" value="{{sport}}">
+                                </label>
+                            </form>
+                        </td>
+                    </tr>
+                 {% endfor %}
+            </table>
+
+<!-- IF THEY SEARCH FOR A TEAM (teams = team name, sport, number of games) -->
+    {% elif teams|length > 0 %}
+
+            <h2>Resulting Teams</h2>
+            <table style="margin-left: auto; margin-right: auto; width: 100%; text-align: center;">
+                <tr>
+                    <th>Team/Player Name</th>
+                    <th>Sport</th>
+                    <th>League</th>
+                    <th># Games This Season</th>
+
+                </tr>
+                {% for item in teams %}
+                <tr>
+                    <td> {{item[0]}}  </td>
+                    <td> {{item[1]}} </td>
+                    <td> {{item[2]}}  </td>
+                    <td> {{item[3]}}  </td>
+                    <td>
+                        <form name="followTeam" action="{{ url_for('explore') }}" method="post">    
+                            <label for="team_name">                
+                                <input type="hidden" name="team_name" value="{{item[0]}}">
+                                <input type="submit" onclick= alertTeam() class="btn btn-primary" value="Follow">
+                            </label>
+                            <label for="team_check">
+                                <input type="hidden" name="team_check" value="{{sport}}">
+                            </label>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+
+            {% else %}
+            <br></br>
+            <h2> {{results}} </h2>
+            {% endif %}
+
+        </table>
+
+    <script>
+            function myFunction(id) {
+                // Changes the search from team to sport and back based on the toggle
+                var toggle = document.getElementById('toggle');
+                var searchbar = document.getElementById('searchbar');
+                if (toggle.value == "searchbysport"){
+                    toggle.value = "searchbyteam";
+                    searchbar.placeholder = 'Search by team';
+                }
+                else {
+                    toggle.value = "searchbysport";
+                    searchbar.placeholder = 'Search by sport';
+                }
+            }
+
+            function alertGame(){
+                alert("Game successfully followed! You can see all your games in the 'Following' tab");
+            }
+            
+            function alertTeam(){
+                alert("All games with this team successfully followed! You can see all your games in the 'Following' tab");
+            }
+        </script>
+    </body>
+</html>
+{% endblock %}
